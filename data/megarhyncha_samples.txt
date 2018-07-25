@@ -1,0 +1,9 @@
+L18_mega_R1_sorted.bam
+L19_mega_R1_sorted.bam
+EL1_mega_R1_sorted.bam
+L20_mega_R1_sorted.bam
+L23_mega_R1_sorted.bam
+L24_mega_R1_sorted.bam
+L27_mega_R1_sorted.bam
+EL4_mega_R1_sorted.bam
+EL6_mega_R1_sorted.bam
