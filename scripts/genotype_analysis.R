@@ -1,20 +1,26 @@
-setwd("~/Dropbox/syma_wgs")
+### principal component analysis of multispecies vcf
+
+setwd("~/Dropbox/syma_speciation")
 library(vcfR);library(adegenet);library(ggplot2);
 library(ape);library(strataG);library(data.table);
 library(pcadapt);library("qvalue");library("OutFLANK");
 library("ggplot2");library(vcfR);library(PopGenome)
 library(plyr);library(ape);library(ggtree)
 library(magrittr)
+library(radiator)
+
+# read in sample data
+sample_data <- read.csv("data/syma_spp_master.csv")
+attach(sample_data)
 
 # 85% complete matrix
-syma.med <- read.vcfR("syma.gatk.85p.d5.maf05.recode.vcf")
+syma.med <- read.vcfR("raw_data/syma.gatk.85p.d5.maf05.recode.vcf")
 dna <- vcfR2DNAbin(syma.med, unphased_as_NA = F, consensus = T, extract.haps = F)
 syma <- DNAbin2genind(dna)
+samples <- as.character(read.table("data/samples.txt")[[1]]) 
+rownames(syma@tab) <- samples
 seq.scaled <- scaleGen(syma,NA.method="mean",scale=F)
 #snpID <- as.data.frame(syma.med.genind$loc.n.all)
-
-samples <- as.character(read.table("samples.txt")[[1]]) 
-rownames(syma@tab) <- samples
 
 clust.k1 <- find.clusters(syma,n.pca=95,n.clust = 1,choose.n.clust = F)
 clust.k2 <- find.clusters(syma,n.pca=95,n.clust = 2,choose.n.clust = F)
@@ -27,43 +33,26 @@ clust <- cbind(sampleID=rownames(syma@tab),clust.k1=unname(clust.k1$grp),clust.k
 pca <- prcomp(seq.scaled,center=F,scale=F)
 screeplot(pca)
 pc <- data.frame(pca$x[,1:3])
-pc$sampleID <- samples
-ggplot(data=pc,aes(x=PC1,y=PC2,col=clust$clust.k2))+geom_text(aes(label=sampleID))
+pc$prep_ID <- rownames(pc)
 
-# sliding window analyses
-#VCF_split_into_scaffolds("syma.gatk.85p.d5.maf05.recode.vcf","syma_split_vcf") 
-syma.popgenome <- readData("syma_split_vcf",format="VCF") # read in folder of scaffolds
+# quick visualization
+ggplot(data=pc,aes(x=PC1,y=PC2,col=clust$clust.k2))+geom_text(aes(label=prepID))
 
+# to do -- regress against missing data, batch for all PCs
 
-pop1 <- get.individuals(syma.popgenome)[[1]] %>% grep("mega",.,value=T)
-pop2 <- get.individuals(syma.popgenome)[[1]] %>% grep("toro",.,value=T)
-pop3 <- get.individuals(syma.popgenome)[[1]] %>% grep("ochr",.,value=T)
-syma.popgenome <- set.populations(syma.popgenome,list(pop1,pop2,pop3),diploid=TRUE) 
-syma.popgenome <- F_ST.stats(syma.popgenome)
-get.F_ST(syma.popgenome)
-new <- sliding.window.transform(syma.popgenome,500,500,type=2,whole.data=FALSE)
-new <- set.populations(syma.popgenome,list(pop1,pop2,pop3),diploid=TRUE) 
-genome.pos <- sapply(sliding@region.names, function(x){
-  split <- strsplit(x," ")[[1]][c(1,3)]
-  val <- mean(as.numeric(split))
-  return(val)
-})       
-length(new@region.names)
-sliding <- diversity.stats(sliding)
+# merge PCs w/ sample data, write to file
+new_df <- merge(sample_data, pc, by.x = "prep_ID", by.y = "prep_ID")
+write.csv(new_df, "data/syma_spp_pcs.csv")
 
-win_snp <- F_ST.stats(sliding)
+# write file for structure w/ radiator
+snps <- tidy_genomic_data("raw_data/syma.85p.1perlocus.vcf")
+genomic_converter(snps, output = c("structure"))
 
-win_fst <- win_snp@nucleotide.F_ST[,1]
-bb_div  <- win_snp@nuc.diversity.within[,1] # diversity among B (bb = "big B")
-lb_div  <- win_snp@nuc.diversity.within[,2] # diversity among B (lb = "little b")
+# random seeds for structure
+sample(1000000:2000000, 15) 
+# [1] 1631127 1557097 1646607 1977274 1347526 
+# [5] 1529654 1715085 1706929 1971822 1907208 
+# [10] 1834841 1136596 1556258 1352111 1354814
 
 
-plot(1:length(win_fst), win_fst)
-
-par(mfrow=c(2,1))
-win_fst <- win_snp@nucleotide.F_ST[,1]
-plot(1:length(bb_div), bb_div)
-
-win_fst <- win_snp@nucleotide.F_ST[,1]
-plot(1:length(lb_div), lb_div)
 
