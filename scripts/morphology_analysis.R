@@ -9,6 +9,7 @@ library(mclust);
 library(gridExtra);
 library(grid);
 library(glmm)
+library(lme4)
 
 # upload data
 setwd("~/Dropbox/syma_speciation/")
@@ -34,8 +35,9 @@ t.test(torotoro$tarsus, megarhyncha$tarsus) #sig
 t.test(torotoro$wing_chord, megarhyncha$wing_chord) #sig
 t.test(torotoro$tail_length, megarhyncha$tail_length) #sig
 
-# glmms - work in progress
-# mod1 <- glmm(PC1 ~ 0 + english_name, data = data, random
+# lm - no need for fixed effect because one observation per individual
+mod1 <- lm(PC1 ~ english_name, data = data)
+summary(mod1)
 
 # perform PCA, export df
 pca<-prcomp(data[,14:19])
