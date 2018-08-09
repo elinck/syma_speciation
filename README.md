@@ -1,4 +1,4 @@
-# Analysis of *Syma* spp. whole genome sequence data
+# analysis of *Syma* spp. genotypes, phenotypes for Linck et al. 2018
 
 Working repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and phenotype data   
 
