@@ -3,10 +3,23 @@
 library(ggplot2);library(viridis);library(maps);library(mapdata);
 library(raster);library(rgdal);library(ggtree);library(cowplot);library(ape)
 library(png);library(gtable)
-library(grid)
+library(grid);library(scales)
 
 sample_data <- read.csv("data/syma_spp_pcs.csv")
 #attach(sample_data)
+
+sample_data$sp <- as.character(sample_data$sp)
+sample_data$sp[which(sample_data$ssp == "ochracea")] <- "ochracea"
+sample_data$sp <- as.factor(sample_data$sp)
+
+#get mean PC values
+sp_means <- aggregate(PC1 ~ sp, data = sample_data, mean)
+meg_val <- sp_means$PC1[1]
+och_val <- sp_means$PC1[2]
+tor_val <- sp_means$PC1[3]
+sample_data$col <- ifelse(sample_data$sp == "megarhyncha", 
+                          meg_val, ifelse(sample_data$sp == "torotoro",
+                                                         tor_val,och_val))
 
 # messy sample size assignment
 sample_data$temp <- as.factor(paste(sample_data$lat, sample_data$long))
@@ -76,41 +89,86 @@ c <- rasterGrob(c)
 
 d <- ggplot(sample_data, aes(elevation, PC1)) +
   scale_fill_viridis()+
-  geom_point(aes(fill=PC1),pch=21,size=4,alpha=0.85,stroke=1) +
-  geom_smooth(method = "lm",se=F,linetype="dashed",col="black")
+  geom_point(aes(fill=PC1),pch=21,size=3,alpha=0.85,stroke=1) +
+  geom_smooth(method = "lm",se=F,linetype="dashed",col="black") +
+  xlab("Elevation") +
+  theme(legend.position = "none")
 
 e <- ggplot(sample_data, aes(lat, PC2)) +
   scale_fill_viridis()+
-  geom_point(aes(fill=PC1),pch=21,size=4,alpha=0.85,stroke=1) + 
-  geom_smooth(method = "lm",se=F,linetype="dashed",col="black")
+  geom_point(aes(fill=PC1),pch=21,size=3,alpha=0.85,stroke=1) + 
+  geom_smooth(method = "lm",se=F,linetype="dashed",col="black") +
+  xlab("Latitude") +
+  theme(legend.position = "none")
 
+# plot AIC
+aic_df <- read.csv("data/aic_plotting.csv")
+f <- ggplot(aic_df, aes(stat, aic)) + 
+  theme_bw() +
+  xlab("Model") +
+  ylab("AIC") +
+  geom_jitter(alpha=0.3) +
+  geom_boxplot() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
-# gridded w/ cowplot
-plot_grid(a, b, c, d, e, labels=c("A","B","C","D","E"), nrow = 2, ncol = 3, rel_widths = c(1,1,1,1,1))
+# plot morphology
+mdata <- read.csv("data/syma_spp_morphology.csv")
 
-# violin plot - reminder for later
-m1 <- ggplot(data, aes(three_species_model, PC1, fill = three_species_model, guide=F)) +
-  theme_light() +
-  geom_point(size=.2,col="grey",position="jitter")+
-  geom_violin(draw_quantiles = c(0.5)) +
-  guides(fill=guide_legend(title="Species"))+
-  scale_fill_manual(labels=c("megarhyncha","ochracea","torotoro"), values=symashade) + 
-  theme(strip.background = element_rect(colour="black", fill="grey100")) +
-  theme(axis.title.x=element_blank())
+# scale palette by PC
+mdata$col <- ifelse(mdata$three_species_model == "megarhyncha", 
+                          meg_val, ifelse(mdata$three_species_model == "torotoro",
+                                          tor_val,och_val))
 
-#histogram
-m2 <- ggplot(data, aes(x=PC1, fill = three_species_model)) + 
-  geom_histogram(aes(y=..density..), alpha=0.2, 
-                 position="dodge",color="black", bins = 30)+
-  theme_light() +
+# function to map colors to viridis palette for discrete histogram
+num_vec <- sample_data$PC1
+map_viridis <- function(vec, num) {
+  
+  vector_expanded <-round(vec, 1) * 10 # expand to allow for decimal precision
+  vector_exp_range <- max(vector_expanded) - min(vector_expanded)
+  
+  colour_vector <- viridis(vector_exp_range + 1) # get vector of colour values for all possible decimals between min and max value
+  value_to_colour <- colour_vector[num * 10 - min(vector_expanded) + 1] # retrieve colour value for number
+  
+  return(value_to_colour)
+  
+}
+
+map_viridis(num_vec, meg_val) # returns "#73D056FF"
+map_viridis(num_vec, tor_val) # returns #443B84FF"
+map_viridis(num_vec, och_val) # returns "#20938CFF"
+
+# plot song
+vdata <- read.csv("data/syma_spp_calls.csv")
+
+g <- ggplot(vdata, aes(x=PC1, fill = two_species)) + 
+  theme_bw() +
+  scale_fill_manual(values = c("#73D056FF","#443B84FF"))+
   coord_flip() +
   guides(fill=guide_legend(title="Species"))+
-  scale_fill_manual(labels=c("megarhyncha","ochracea","torotoro"), values=symashade) + 
   geom_density(alpha=0.9)+
+  theme(legend.position = "none") +
   xlab("PC1") +
   ylab("Density")
 
-pdf("~/Dropbox/remark_presentations/figures/morphology.pdf", width = 5, height = 7)
-grid.arrange(m1,m2,ncol=1)
-dev.off()
+# plot morphology
+h <- ggplot(mdata, aes(x=PC1, fill = three_species_model)) + 
+  theme_bw() +
+  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"))+
+  coord_flip() +
+  guides(fill=guide_legend(title="Species"))+
+  geom_density(alpha=0.9)+
+  theme(legend.position = "none") +
+  xlab("PC1") +
+  ylab("Density")
 
+# gridded w/ cowplot
+top <- plot_grid(a, d, e, labels=c("A","B","C"), nrow = 1, ncol = 3, rel_widths = c(2.5,1,1), rel_heights = c(1,0.8,0.8))
+#left <- plot_grid(d, e, labels=c("D","E"), nrow = 1, ncol = 2, rel_widths = c(1,1))
+right <- plot_grid(g, h, labels=c("G","H"), nrow = 1, ncol = 2, rel_widths = c(1,1))
+#legend_lm <- get_legend(e + theme(legend.position="bottom"))
+#lm <- plot_grid(left, legend_lm, ncol = 1, rel_heights = c(1, .2))
+legend_pheno <- get_legend(h + theme(legend.position="bottom"))
+phylo <- plot_grid(b, c, labels=c("B","C"), ncol = 2)
+pheno <- plot_grid(right, legend_pheno, ncol = 1, rel_heights = c(1, .2))
+bottom <- plot_grid(phylo, pheno, ncol = 2, rel_widths = c(0.9,1.1))
+joint <- plot_grid(top, bottom, nrow = 2, rel_heights = c(1,0.8))

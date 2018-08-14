@@ -32,11 +32,11 @@ def IIMG(params, ns, pts):
     nu2_func = lambda t: (1-s) * (nu2/(1-s))**(t/T2)
     phi=dadi.Integration.two_pops(phi,xx,T1,nu1,nu2,m12=m12,m21=m21)
     phi=dadi.Integration.two_pops(phi,xx,T2,nu1=nu1_func,nu2=nu2_func,m12=0,m21=0)
-    fs = dadi.Spectrum.from_phi(phi, ns, (xx,xx))
-    return fs
+    model_fs = dadi.Spectrum.from_phi(phi, ns, (xx,xx))
+    return model_fs
 
 # define optimization parameters
-pts = [20,30,40]
+pts = [40,50,60]
 p_labels = "s, nu1, nu2, m12, m21, T1, T2"
 upper = [1,20,20,10,10,10,15]
 lower = [0.01,0.01,0.01,0.01,0.01,0.1,0.5]

@@ -42,7 +42,7 @@ def IM(params, ns, pts):
     return model_fs
 
 # define optimization parameters
-pts = [20,30,40]
+pts = [40,50,60]
 p_labels = "nu1, nu2, m12, m21, Tdiv"
 upper = [20,20,10,10,15]
 lower = [0.01,0.01,0.01,0.01,0.1]

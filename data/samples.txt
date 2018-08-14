@@ -29,9 +29,7 @@ EL52_toro
 EL53_toro
 EL54_toro
 EL55_toro
-EL56_toro
 EL57_toro
-EL58_toro
 EL59_toro
 EL5_ochr
 EL60_toro
