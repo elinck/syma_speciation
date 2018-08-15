@@ -72,28 +72,12 @@ syma.dadi <- read.vcfR("raw_data/syma.wgs.filtered.recode.vcf")
 vcf2dadi("raw_data/syma.wgs.filtered.recode.vcf", strata = "data/id_pop_dadi.txt", imputation.method = "max")
 
 # read dadi results
-SC <- read.csv("raw_data/V5_Number_1.SC.optimized.txt", sep = '\t')
-IM <- read.table("raw_data/V5_Number_1.IM.optimized.txt", sep = '\t')
-IIM <- read.table("raw_data/V5_Number_1.IIM.optimized.txt", sep = '\t')
-SI <- read.table("raw_data/V5_Number_1.IIM.optimized.txt", sep = '\t')
+dadi <- read.csv("raw_data/dadi_results.txt", sep = '\t')
 
 # subset to last round
-SC <- SC[31:80,]
-IM <- IM[31:80,]
-IIM <- IIM[31:80,]
-SI <- SI[31:80,]
+dadi_optim <- dadi[grep("Round_3", dadi$Replicate),]
+dadi_optim$AIC <- as.numeric(as.character(dadi_optim$AIC))
+dadi_optim <- dadi_optim[order(dadi_optim$AIC),] # SC Round_3_Replicate_2 -384.94 781.88, then IMG Round_3_Replicate_3 -421.64 855.28
 
 # create liklihood df
-SC_c1 <- as.numeric(as.character(SC[,4]))
-IM_c1 <- as.numeric(as.character(IM[,4]))
-IIM_c1 <- as.numeric(as.character(IIM[,4]))
-SI_c1 <- as.numeric(as.character(SI[,4]))
-SC_c2 <- rep("SC", 50)
-IM_c2 <- rep("IM", 50)
-IIM_c2 <- rep("IIM", 50)
-SI_c2 <- rep("SI", 50)
-aic <- c(SC_c1, IM_c1, IIM_c1, SI_c1)
-stat <- as.vector(c(SC_c2, IM_c2, IIM_c2, SI_c2))
-aic_df <- cbind.data.frame(aic, stat)
-write.csv(aic_df, "data/aic_plotting.csv")
-
+write.csv(dadi_optim, "data/dadi_plotting.csv")

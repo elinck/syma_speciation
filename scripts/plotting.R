@@ -102,12 +102,14 @@ e <- ggplot(sample_data, aes(lat, PC2)) +
   theme(legend.position = "none")
 
 # plot AIC
-aic_df <- read.csv("data/aic_plotting.csv")
-f <- ggplot(aic_df, aes(stat, aic)) + 
+dadi_df <- read.csv("data/dadi_plotting.csv")
+dadi_df <- dadi_df[dadi_df$Model!="IIM",]
+f <- ggplot(dadi_df, aes(Model, log.likelihood)) + 
   theme_bw() +
   xlab("Model") +
-  ylab("AIC") +
-  geom_jitter(alpha=0.3) +
+  ylab("Log Likelihood") +
+  #scale_y_continuous(limits=c(500,2000))+
+  geom_jitter(alpha=0.2) +
   geom_boxplot() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
@@ -139,7 +141,6 @@ map_viridis(num_vec, och_val) # returns "#20938CFF"
 
 # plot song
 vdata <- read.csv("data/syma_spp_calls.csv")
-
 g <- ggplot(vdata, aes(x=PC1, fill = two_species)) + 
   theme_bw() +
   scale_fill_manual(values = c("#73D056FF","#443B84FF"))+
@@ -162,7 +163,7 @@ h <- ggplot(mdata, aes(x=PC1, fill = three_species_model)) +
   ylab("Density")
 
 # gridded w/ cowplot
-top <- plot_grid(a, d, e, labels=c("A","B","C"), nrow = 1, ncol = 3, rel_widths = c(2.5,1,1), rel_heights = c(1,0.8,0.8))
+top <- plot_grid(a, d, e, labels=c("A","B","C"), nrow = 1, ncol = 3, rel_widths = c(2,1,1), rel_heights = c(1,0.8,0.8))
 #left <- plot_grid(d, e, labels=c("D","E"), nrow = 1, ncol = 2, rel_widths = c(1,1))
 right <- plot_grid(g, h, labels=c("G","H"), nrow = 1, ncol = 2, rel_widths = c(1,1))
 #legend_lm <- get_legend(e + theme(legend.position="bottom"))
@@ -170,5 +171,5 @@ right <- plot_grid(g, h, labels=c("G","H"), nrow = 1, ncol = 2, rel_widths = c(1
 legend_pheno <- get_legend(h + theme(legend.position="bottom"))
 phylo <- plot_grid(b, c, labels=c("B","C"), ncol = 2)
 pheno <- plot_grid(right, legend_pheno, ncol = 1, rel_heights = c(1, .2))
-bottom <- plot_grid(phylo, pheno, ncol = 2, rel_widths = c(0.9,1.1))
-joint <- plot_grid(top, bottom, nrow = 2, rel_heights = c(1,0.8))
+bottom <- plot_grid(phylo, pheno, ncol = 2, rel_widths = c(1,1))
+joint <- plot_grid(top, bottom, nrow = 2, rel_heights = c(1,1))

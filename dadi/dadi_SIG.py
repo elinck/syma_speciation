@@ -9,10 +9,10 @@ import Optimize_Functions
 # Usage: python dadi_Run_Optimizations.py
 
 # import data
-snps = "/media/burke/bigMac/ethan/dadi/dadi_input_wgs.tsv"
+snps = "/media/burke/bigMac/ethan/dadi/syma_dadi_file.tsv"
 dd = dadi.Misc.make_data_dict(snps)
 pop_ids=["1", "2"]
-proj = [18,18]
+proj = [12,16]
 fs = dadi.Spectrum.from_data_dict(dd, pop_ids=pop_ids, projections = proj, polarized = False)
 
 # print info about sfs
