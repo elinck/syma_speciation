@@ -240,7 +240,7 @@ mawk '!/D/' depth.dist | mawk -v x=39 '{print $1/x}' > meandepthpersite
 
 Plot as a histogram in the terminal window (rad as hell; via [dDocent](http://ddocent.com/filtering/))
 
-````
+```
 gnuplot << \EOF 
 set terminal dumb size 120, 30
 set autoscale
@@ -254,7 +254,7 @@ bin(x,width)=width*floor(x/width) + binwidth/2.0
 set xtics 5
 plot 'meandepthpersite' using (bin($1,binwidth)):(1.0) smooth freq with boxes
 pause -1
-EOF
+EOF  
 ```  
 
 Evaluating these data, we next drop sites covered with fewer than 3 reads and more than 120:  
