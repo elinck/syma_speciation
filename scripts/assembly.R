@@ -46,7 +46,7 @@ for(i in 1:length(R1)){
   system(commands[i])
 }
 
-system("mkdir syma_clean_2; mv *clean* syma_clean_2")
+system("mkdir syma_clean; mv *clean* syma_clean")
 
 ### align trimmed reads to reference sample
 R1 <- list.files("/media/burke/bigMac/ethan/syma_cleaned",full.names=T) %>% grep("R1",.,value=T)
@@ -112,7 +112,6 @@ for(i in 1:length(bam_hyrad)){
                         "samtools index ",bam_hyrad[i]
   )
 }
-
 for(i in 1:length(bam_hyrad)){
   system(commands[i])
 }
@@ -160,4 +159,6 @@ for(i in 1:length(names)){
                         " -quick /media/burke/bigMac/ethan/mtDNA/t_sanctus_ref.fasta &> log;")
 }
 
-system(commands[i]) #issue with looped version
+for(i in 1:length(paths)){
+  system(commands[i])
+}

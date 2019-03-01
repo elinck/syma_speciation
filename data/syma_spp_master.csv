@@ -1,0 +1,41 @@
+museum,sample,year,sp,ssp,locality,prep_ID,lat,long,order,qubit
+YPM,91444,1969,megarhyncha,sellamontis,"Huon, PNG",EL1_mega,-7.3667,146.6667,1,90.9
+AMNH,302859,1930,megarhyncha,wellsi,"Mt. Derimapa, WP",EL4_mega,-3.63,134.93,4,18.9
+AMNH,329540,1928,torotoro,ochracea,"Fergusson Is, PNG",EL5_ochr,-9.5,150.666667,5,6.93
+AMNH,339957,1939,megarhyncha,wellsi,"Bernhard Camp, WP",EL6_mega,-4.04,137.07,6,19.4
+AMNH,426095,1936,torotoro,flavirostris,"Fly River, PNG",EL8_toro,-8.25,142.98,8,6.72
+AMNH,426121,1937,torotoro,meeki,"Wassi Kussi R, PNG",EL9_toro,-9.166667,142.066667,9,13.1
+AMNH,637460,1900,torotoro,tentelare,Aru is,EL10_toro,-5.95,134.57,10,6.88
+AMNH,637471,1899,torotoro,meeki,simbang,EL11_toro,-6.56,147.82,11,9.92
+AMNH,637511,1913,torotoro,flavirostris,Cape York,EL13_toro,-12.576589,143.3037,13,6.71
+AMNH,808986,1965,megarhyncha,megarhyncha,Okapa,EL18_mega,-6.516667,145.616667,18,44.6
+ANWC,B02192,1963,megarhyncha,megrhyncha,Western PNG,EL19_mega,-5.9917,144.6167,19,69.2
+ANWC,B04293,1966,megarhyncha,megarhyncha,Morobe,EL20_mega,-5.873333333,146.7183333,20,47.1
+ANWC,B07499,1966,torotoro,torotoro,East Sepik,EL21_toro,-3.683,143.633,21,18
+ANWC,B25307,1973,megarhyncha,megarhyncha,Wagau,EL23_mega,-6.8,146.8,23,86.3
+ANWC,B26140,1973,megarhyncha,sellamontis,Huon,EL24_mega,-6.4583,147.4333,24,80.1
+AMNH,301861,1931,megarhyncha,wellsi,Weylendgep Kunupi,EL27_mega,-3.92,135.65,27,12.75
+AMNH,329539,1928,torotoro,ochracea,Fergusson Is,EL29_ochr,-9.5,150.666667,29,6.4
+AMNH,426096,1936,torotoro,flavirostris,Fly River,EL32_toro,-8.25,142.98,32,17.2
+ANWC,B07293,1966,torotoro,torotoro,E. Sepik,EL39_toro,-3.683,143.633,39,15.6
+ANWC,B25652,1973,megarhyncha,sellamontis,Huon,EL40_mega,-6.4583,147.4333,40,41.5
+KU,5215,2003,torotoro,pseuestes,"Gulf Province, Ivimka Camp, PNG",EL41_toro,-7.73,146.50,41,71.6
+KU,5464,2003,torotoro,pseuestes,"Gulf Province, Sapoa Camp, PNG",EL42_toro,-6.92,144.96,42,51.8
+KU,6927,2011,torotoro,meeki,"Oro Province, Mt. Suckling, PNG",EL43_toro,-9.67,149.01,43,37
+CAS,7131,2002,torotoro,pseuestes,"Gulf Province, Dark End Camp, PNG",EL44_toro,-7.07,144.31,44,31.8
+KU,626,2011,torotoro,meeki,"Varirata NP, PNG",EL45_toro,-9.45,147.34,45,43
+AMNH,637445,2003,torotoro,torotoro,"East Sepik, Gahom Camp, PNG",EL46_toro,-4.62,142.75,46,10.1
+AMNH,329542,1928,torotoro,torotoro,"Wasior, WP",EL47_toro,-2.72,134.50,47,3.66
+AMNH,637464,1934,torotoro,ochracea,"Sewa Bay, Normanby Island",EL48_ochr,-10.03,150.98,48,3.84
+AMNH,637450,1896,torotoro,tentelare,"Wannambai, Kobror Is, Aru islands, WP",EL49_toro,-5.95,134.57,49,10.2
+AMNH,637429,1928,torotoro,torotoro,"Hollandia, Humbolt Bay, WP",EL50_toro,-2.56,140.70,50,0.714
+AMNH,300723,1900,torotoro,torotoro,"Misol Is, WP",EL51_toro,-1.87,130.17,51,2.54
+AMNH,637446,1900,torotoro,torotoro,"Waigeu Is, WP",EL52_toro,-0.23,130.75,52,0.846
+AMNH,300723,1897,torotoro,torotoro,"Kepaur, WP",EL53_toro,-2.92,132.30,53,1.07
+NHMUK,1911.12.20.823,1913,torotoro,pseuestes,"Parimau, Mimika River, WP",EL54_toro,-4.31,136.51,54,1.49
+NHMUK,1911.12.20.822,1911,torotoro,pseuestes,"Satakwa River, Canoe Camp, WP",EL55_toro,-4.78,137.34,55,0.584
+AMNH,437798,1877,torotoro,torotoro,"Amberbaki, WP",EL56_toro,-0.57,133.13,56,1.84
+AMNH,637441,1899,torotoro,torotoro,"Mt. Mori (Maori), Arfak Mountains, WP",EL57_toro,-1.30,134.16,57,7.36
+AMNH,637464,1900,torotoro,tentelare,"Wannambai, Kobror Is, Aru islands, WP",EL58_toro,-5.95,134.57,58,2.94
+AMNH,293714,1928,torotoro,torotoro,"Ifaar (near Jayapyura), WP",EL59_toro,-2.57,140.52,59,0.124
+AMNH,293715,1928,torotoro,torotoro,"Kepaur, WP",EL60_toro,-2.72,134.50,60,0.15

@@ -49,7 +49,12 @@ scores <- pca$x[,1:3] # select first 3 PCs
 params <- cbind(scores,params)
 names(params)[names(params) == 'sp.'] <- 'two_species'
 write.csv(params,"data/syma_spp_calls.csv")
+df <- read.csv("data/syma_spp_calls.csv")
 
 # glmm -- species as fixed effect, individual as random effect
-mod1 <- lmerTest::lmer(PC1 ~ species + (1 | indiv), data = df)
-summary(mod1) # sig 9.43e-06 ***
+mod1 <- lmerTest::lmer(meanfreq ~ two_species + (1 | sound.files), data = df)
+mod2 <- lmerTest::lmer(duration ~ two_species + (1 | sound.files), data = df)
+mod3 <- lmerTest::lmer(PC1 ~ two_species + (1 | sound.files), data = df)
+summary(mod1) # sig 7.44e-06 ***
+summary(mod2) # not sig 0.258417
+summary(mod3) # sig 9.43e-06 ***
