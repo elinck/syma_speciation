@@ -255,10 +255,9 @@ set xtics 5
 plot 'meandepthpersite' using (bin($1,binwidth)):(1.0) smooth freq with boxes
 pause -1
 EOF
+```  
 
-```
-
-Evaluating these data, we next drop sites covered with fewer than 3 reads and more than 120: 
+Evaluating these data, we next drop sites covered with fewer than 3 reads and more than 120:  
 
 ```
 vcftools --vcf syma.80.mac2.recode.vcf --minDP 3 --maxDP 120 --recode --recode-INFO-all --out syma.80.mac2.dp3
