@@ -338,7 +338,7 @@ vcftools --gzvcf syma_recal_gatk_all.vcf.gz --remove hyrad.bams --minQ 30 --minD
 
 (After filtering, we kept 102606487 out of a possible 989764264 sites.) 
 
-Finally, we'll extract Chromosome 5 for comparison w/ simulated data, then restrict our analysis to *megarhyncha*
+Finally, we'll extract Chromosome 5 for comparison w/ simulated data, then restrict our analysis to *megarhyncha:*
 
 ```
 vcftools --gzvcf syma.wgs.all.recode.vcf.gz --chr scaffold_13 --recode --recode-INFO-all --out syma.scaf13
@@ -391,7 +391,7 @@ Loglikelihood: -90818.879955, CV error (K=5): 1.11336
 
 Across all runs, assignments are random with respect to geography, batch, and species identity, suggesting sample size is insufficient
 given the level of discordance. We therefore move to supervised mode, using file `syma.admix.pop` in the same directory, with population
-identities in a single column in the order of samples in the .vcf file:
+identities in a single column in the order of samples in the `.vcf` file:
 
 ```
 /media/burke/bigMac/ethan/alignment/recalibrated/admixture_linux-1.3.0/admixture syma.admix.ped 3 --supervised --cv
@@ -486,7 +486,7 @@ smc++ plot toro.plot.png 1.model.final.json 2.model.final.json 3.model.final.jso
 
 ## Windowed stats
 
-Requires scripts from Simon Martin's (`genomics_general`)[https://github.com/simonhmartin/genomics_general] repository.  
+Requires scripts from Simon Martin's [`genomics_general`](https://github.com/simonhmartin/genomics_general) repository.  
 
 
 First, we use the script `parseVCF.py` to convert our vcf (with invariant sites) to the `.geno` custom file format. 
@@ -690,5 +690,5 @@ All plots can be reproduced from processed data files in `data/` using `plotting
 
 ## Authorship  
 
-Pipeline by me ((Ethan Linck)[https://elinck.org/]), with many contributions by [C.J. Battey](http://cjbattey.com/).
+Pipeline by me ([Ethan Linck](https://elinck.org/)), with many contributions by [C.J. Battey](http://cjbattey.com/).
 
