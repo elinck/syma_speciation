@@ -428,7 +428,7 @@ python SI_model.py;
 python IM_model.py;
 python SC_model.py;
 python IIM_model.py;
-uncertainty.py
+python uncertainty.py
 ```
 
 ## Treemix
