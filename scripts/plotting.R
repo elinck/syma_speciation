@@ -14,7 +14,7 @@ library(gtable)
 library(grid)
 library(scales)
 library(phytools)
-library(patchwork)
+library(cowplot)
 library(ape)
 library(phangorn)
 library(ggridges)
@@ -196,7 +196,7 @@ map2color<-function(x,pal,limits=NULL){
 mag <- map2color(dtable$prop_sig,magma(8))
 i <- ggplot(data=dstat,aes(x=abs(Z),y=tree,fill=tree))+
   theme_bw() +
-  theme(axis.title=element_text(size=8),
+  theme(axis.title=element_text(size=12),
         axis.text=element_text(size=8))+
   scale_fill_manual(values=mag,guide=FALSE)+
   ylab("Test")+xlab("abs(Z)")+
@@ -209,9 +209,9 @@ i <- ggplot(data=dstat,aes(x=abs(Z),y=tree,fill=tree))+
 
 #plot moments
 ll.models <- read.csv("data/moments_plotting.csv")
-quartz()
 j <- ggplot(ll.models, aes(x=model, y=ll_model)) + 
   theme_bw()+
+  theme(axis.title=element_text(size=12)) +
   geom_jitter(shape=16, position=position_jitter(0.2)) +
   #geom_jitter(shape=16, position=position_jitter(0.2), color="#8A008A") +
   geom_boxplot(alpha=0.8) +
@@ -236,8 +236,8 @@ smc <- read.csv("data/smcpp_df.csv",stringsAsFactors = F)
 #pdf("figures/fig3.pdf",width=3.25,height=4)
 l <- ggplot(data=smc,aes(x=x,y=y))+facet_grid(species~.)+
   theme_bw()+
-  theme(axis.title=element_text(size=8),
-        strip.text=element_text(size=8),
+  theme(axis.title=element_text(size=12),
+        strip.text=element_text(size=12),
         axis.text=element_text(size=8),
         panel.grid.major=element_line(color="grey",size=0.25),
         strip.background = element_blank())+
@@ -252,7 +252,7 @@ l <- ggplot(data=smc,aes(x=x,y=y))+facet_grid(species~.)+
 
 # plot network
 m <- readPNG("~/Dropbox/syma_speciation/figures/phylonet.png")
-m <- rasterGrob(l)
+m <- rasterGrob(m)
 
 pdf("figures/final/Fig_3_introgression.pdf",width=8,height=7)
 plot_grid(i,m,j,l, labels = "AUTO", align = 'h', label_size = 12, nrow = 2)
