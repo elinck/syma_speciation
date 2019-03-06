@@ -202,8 +202,8 @@ smc_mega$species <- rep("megarhyncha", nrow(smc_mega))
 smcpp.df <- rbind.data.frame(smc_toro,smc_mega)
 write.csv(smcpp.df, "data/smcpp_df.csv")
 
-# read in windowed summary stat data 
-win.df <- fread("raw_data/syma_windows.csv")
+# read in windowed summary stat data, overlapping 
+win.df <- fread("raw_data/syma_windows_overlap.csv")
 win.df <- win.df[complete.cases(win.df),]
 #df <- subset(df, sites > 10)
 #restrict to good scaffolds
@@ -272,9 +272,74 @@ chr_labels <- subset(chr_labels,!is.na(chr) & !duplicated(chr))
 # ready for faceting
 fst <- win.df
 win.df$windowID <- seq.int(nrow(win.df))
-colnames(win.df) <- c("scaffold","start","end","mid","sites","pi_toro","pi_meg","dxy_toro_meg","fst","windowID", "refName","totalMatch","refStart","chr","row","rollmean")
+colnames(win.df) <- c("scaffold","start","end","mid","sites","pi_meg","pi_toro","dxy_meg_toro","fst","windowID", "refName","totalMatch","refStart","chr","row")
 fst.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$fst,win.df$row)
-dxy.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$dxy_toro_meg,win.df$row)
+dxy.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$dxy_meg_toro,win.df$row)
+pi.tor.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$pi_toro,win.df$row)
+pi.meg.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$pi_meg,win.df$row)
+colnames(fst.df) <- c("windowID", "start", "end", "chr", "scaffold", "value","row")
+fst.df$stat <- rep("fst", nrow(fst.df))
+fst.df$rollmean <- zoo::rollmean(fst.df$value,150,na.pad = TRUE)
+colnames(dxy.df) <- c("windowID", "start", "end", "chr", "scaffold", "value","row")
+dxy.df$stat <- rep("dxy", nrow(dxy.df))
+dxy.df$rollmean <- zoo::rollmean(dxy.df$value,150,na.pad = TRUE)
+colnames(pi.tor.df) <- c("windowID", "start", "end", "chr", "scaffold", "value","row")
+pi.tor.df$stat <- rep("pi_tor", nrow(pi.tor.df))
+pi.tor.df$rollmean <- zoo::rollmean(pi.tor.df$value,150,na.pad = TRUE)
+colnames(pi.meg.df) <- c("windowID", "start", "end", "chr", "scaffold", "value","row")
+pi.meg.df$stat <- rep("pi_meg", nrow(pi.meg.df))
+pi.meg.df$rollmean <- zoo::rollmean(pi.meg.df$value,150,na.pad = TRUE)
+win.df <- rbind.data.frame(fst.df, dxy.df, pi.meg.df, pi.tor.df)
+win.df$col = ifelse(as.numeric(win.df$chr) %% 2 == 0, 0, 1)
+fst_df <- win.df[win.df$stat=="fst",]
+dxy_df <- win.df[win.df$stat=="dxy",]
+pi_tor_df <- win.df[win.df$stat=="pi_tor",]
+pi_meg_df <- win.df[win.df$stat=="pi_meg",]
+fst_df$outlier <- fst_df$value>=quantile(fst_df$value,0.995, na.rm = TRUE)
+quantile(fst_df$value,0.995, na.rm = TRUE) #0.4084545
+dxy_df$outlier <- dxy_df$value>=quantile(dxy_df$value,0.995, na.rm = TRUE)
+quantile(dxy_df$value,0.995, na.rm = TRUE) #0.17  
+pi_tor_df$outlier <- pi_tor_df$value>=quantile(pi_tor_df$value,0.995, na.rm = TRUE)
+quantile(pi_tor_df$value,0.995, na.rm = TRUE) #0.168
+pi_meg_df$outlier <- pi_meg_df$value>=quantile(pi_meg_df$value,0.995, na.rm = TRUE)
+quantile(pi_meg_df$value,0.995, na.rm = TRUE) #0.1514545
+plot.df <- rbind(fst_df,dxy_df,pi_tor_df,pi_meg_df)
+
+# parsing for special characters and labels
+plot.df$stat <- factor(plot.df$stat, levels = c("dxy","fst","pi_meg","pi_tor"),
+                  ordered = TRUE, labels=c(expression('D[XY]'), expression('F[ST]'),paste(expression(pi),expression('[megarhyncha]')),paste(expression(pi),expression('[torotoro]'))))
+#plot.df.seg <- cbind(plot.df, chr_labels)
+write.csv(plot.df,"data/window_stats_chr.csv")
+
+# write chr data file
+write.csv(chr_labels,"data/chr_labels.csv")
+
+# read in windowed summary stat data, nonoverlapping (for outlier window analysis)
+win.df <- fread("raw_data/syma_windows.csv")
+win.df <- win.df[complete.cases(win.df),]
+#df <- subset(df, sites > 10)
+
+#restrict to good scaffolds
+scaf <- as.data.frame(table(win.df$scaffold))
+scaf <- subset(scaf, Freq > 10)
+scaf <- as.vector(scaf$Var1)
+win.df <- win.df[win.df$scaffold %in% scaf,]
+win.df$windowID <- seq.int(nrow(win.df))
+
+#merge mummer info with angsd windowed Fst's
+win.df <- merge(win.df,sum,by.x="scaffold",by.y="qName",all.x=T,all.y=F)
+win.df$chr <- gsub("chr","",win.df$refName)
+win.df$chr[!win.df$chr %in% chr_order] <- "NA"
+win.df$chr <- factor(win.df$chr,levels=chr_order)
+win.df <- arrange(win.df,chr,refStart)
+win.df$row <- 1:nrow(win.df)
+
+# ready for faceting
+fst <- win.df
+win.df$windowID <- seq.int(nrow(win.df))
+colnames(win.df) <- c("scaffold","start","end","mid","sites","pi_meg","pi_toro","dxy_meg_toro","fst","windowID", "refName","totalMatch","refStart","chr","row")
+fst.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$fst,win.df$row)
+dxy.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$dxy_meg_toro,win.df$row)
 pi.tor.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$pi_toro,win.df$row)
 pi.meg.df <- cbind.data.frame(win.df$windowID, win.df$start, win.df$end, win.df$chr, win.df$scaffold, win.df$pi_meg,win.df$row)
 colnames(fst.df) <- c("windowID", "start", "end", "chr", "scaffold", "value","row")
@@ -296,23 +361,18 @@ dxy_df <- win.df[win.df$stat=="dxy",]
 pi_tor_df <- win.df[win.df$stat=="pi_tor",]
 pi_meg_df <- win.df[win.df$stat=="pi_meg",]
 fst_df$outlier <- fst_df$value>=quantile(fst_df$value,0.995, na.rm = TRUE)
-quantile(fst_df$value,0.995, na.rm = TRUE) #0.409031
+quantile(fst_df$value,0.995, na.rm = TRUE) #0.409031 
 dxy_df$outlier <- dxy_df$value>=quantile(dxy_df$value,0.995, na.rm = TRUE)
-quantile(dxy_df$value,0.995, na.rm = TRUE) #0.1727  
+quantile(dxy_df$value,0.995, na.rm = TRUE) #0.1727 
 pi_tor_df$outlier <- pi_tor_df$value>=quantile(pi_tor_df$value,0.995, na.rm = TRUE)
-quantile(pi_tor_df$value,0.995, na.rm = TRUE) #0.1527655
+quantile(pi_tor_df$value,0.995, na.rm = TRUE) #0.1701
 pi_meg_df$outlier <- pi_meg_df$value>=quantile(pi_meg_df$value,0.995, na.rm = TRUE)
-quantile(pi_meg_df$value,0.995, na.rm = TRUE) #0.1701
+quantile(pi_meg_df$value,0.995, na.rm = TRUE) #0.1527655
 plot.df <- rbind(fst_df,dxy_df,pi_tor_df,pi_meg_df)
 
-# parsing for special characters and labels
-plot.df$stat <- factor(plot.df$stat, levels = c("dxy","fst","pi_meg","pi_tor"),
-                  ordered = TRUE, labels=c(expression('D[XY]'), expression('F[ST]'),paste(expression(pi),expression('[megarhyncha]')),paste(expression(pi),expression('[torotoro]'))))
-#plot.df.seg <- cbind(plot.df, chr_labels)
-write.csv(plot.df,"data/window_stats_chr.csv")
-
-# write chr data file
-write.csv(chr_labels,"data/chr_labels.csv")
+# write csv, reload
+write.csv(plot.df,"data/window_stats_outliers.csv")
+plot.df <- read.csv("data/window_stats_outliers.csv")
 
 # get Fst outlier windows
 fst.out <- plot.df[plot.df$stat=="F[ST]",]
@@ -390,7 +450,7 @@ meg.pi.val <- as.numeric(as.character(meg.pi$PI))
 wilcox.test(sim.pi.val, meg.pi.val) # W = 771640, p-value < 2.2e-16
 
 # redo windowed stats df for correlations
-win.df <- fread("raw_data/syma_windows.csv")
+win.df <- fread("raw_data/syma_windows_overlap.csv")
 win.df <- win.df[complete.cases(win.df),]
 #df <- subset(df, sites > 10)
 #restrict to good scaffolds
@@ -403,15 +463,15 @@ write.csv(win.df,"data/window_correlations.csv")
 
 # get means and correlations (update ms)
 lm1 <- lm(Fst_meg_toro ~ dxy_meg_toro, win.df)
-summary(lm1) #p-value: < 2.2e-16, Adjusted R-squared:  0.1087
+summary(lm1) #p-value: < 2.2e-16, Adjusted R-squared:  0.1271
 lm2 <- lm(Fst_meg_toro ~ pi_meg, win.df)
-summary(lm2) #p-value: < 2.2e-16, 0.3605
+summary(lm2) #p-value: < 2.2e-16, 0.3785 
 lm3 <- lm(Fst_meg_toro ~ pi_toro, win.df)
-summary(lm3) #p-value: < 2.2e-16, 0.2361
+summary(lm3) #p-value: < 2.2e-16, 0.2427
 lm4 <- lm(dxy_meg_toro ~ pi_toro, win.df)
-summary(lm4) #p-value: < 2.2e-16, 0.9048  
+summary(lm4) #p-value: < 2.2e-16, 0.9214  
 lm5 <- lm(dxy_meg_toro ~ pi_meg, win.df)
-summary(lm5) #p-value: < 2.2e-16, 0.833 
+summary(lm5) #p-value: < 2.2e-16, 0.8495 
 
 # coverage and mapping summary stats
 cov.df <- read.table("data/coverage.txt")

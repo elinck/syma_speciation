@@ -94,8 +94,9 @@ b <- ggplot(data=sample_data,aes(x=PC1,y=PC2,col=sp)) +
   geom_text(aes(label=prep_ID, color=sp)) +
   scale_color_manual(values = c("#73D056FF","#20938CFF","#443B84FF"),guide=FALSE)+
   theme_bw() +
-  ylim(-29,10)
-
+  ylim(-29,10) +
+  xlab("Genotype PC1") +
+  ylab("Genotype PC2")
   
 c <- readPNG("~/Dropbox/syma_speciation/figures/syma.png")
 c <- rasterGrob(c)
@@ -144,7 +145,7 @@ e <- ggplot(vdata, aes(x=PC1, fill = two_species)) +
   guides(fill=guide_legend(title="Species"))+
   geom_density(alpha=0.9)+
   theme(legend.position = "none") +
-  xlab("PC1") +
+  xlab("Acoustic PC1") +
   ylab("Density") 
 
 # plot morphology
@@ -155,7 +156,7 @@ f <- ggplot(mdata, aes(x=PC1, fill = three_species_model)) +
   guides(fill=guide_legend(title="Species"))+
   geom_density(alpha=0.9)+
   theme(legend.position = "none") +
-  xlab("PC1") +
+  xlab("Morphological PC1") +
   ylab("Density")
 
 # mtDNA tree
@@ -261,7 +262,7 @@ dev.off()
 # manhattan plots
 win.df <- read.csv("data/window_stats_chr.csv")[,-1]
 chr_labels <- read.csv("data/chr_labels.csv")
-#quartz()
+quartz()
 #png(width=6,height=1.5,units="in",res=600,file="~/Desktop/both.png")
 n <- ggplot(data=win.df,aes(x=row,y=value,col=chr))+theme_bw()+
   theme(legend.position="none",
@@ -273,18 +274,18 @@ n <- ggplot(data=win.df,aes(x=row,y=value,col=chr))+theme_bw()+
         axis.title.y = element_blank(),
         axis.ticks.x=element_blank())+  
   scale_y_continuous(breaks=seq(0,1.0,0.2),minor_breaks = NULL)+
-  geom_point(data=subset(win.df,value>0.0),size=1,shape=16,alpha=0.7,aes(color=factor(col)))+
-  geom_point(data=subset(win.df, outlier=="TRUE"),size=1,shape=16,col="red")+
+  geom_point(data=subset(win.df,value>0.0),size=0.75,shape=16,alpha=0.7,aes(color=factor(col)))+
+  geom_point(data=subset(win.df, outlier=="TRUE"),size=0.75,shape=16,col="red")+
   scale_color_manual(values=rep(c("grey70","grey85"),length(levels(factor(win.df$chr)))/2+1))+
-  geom_hline(data=subset(win.df, stat=="F[ST]"),aes(yintercept=0.409031),linetype="dashed",lwd=0.25)+
-  geom_hline(data=subset(win.df, stat=="D[XY]"),aes(yintercept=0.1727),linetype="dashed",lwd=0.25)+
-  geom_hline(data=subset(win.df, stat=="pi [megarhyncha]"),aes(yintercept=0.1701),linetype="dashed",lwd=0.25)+
-  geom_hline(data=subset(win.df, stat=="pi [torotoro]"),aes(yintercept=0.1527655),linetype="dashed",lwd=0.25)+
+  geom_hline(data=subset(win.df, stat=="F[ST]"),aes(yintercept=0.4084545),linetype="dashed",lwd=0.25)+
+  geom_hline(data=subset(win.df, stat=="D[XY]"),aes(yintercept=0.17),linetype="dashed",lwd=0.25)+
+  geom_hline(data=subset(win.df, stat=="pi [megarhyncha]"),aes(yintercept=0.1514545),linetype="dashed",lwd=0.25)+
+  geom_hline(data=subset(win.df, stat=="pi [torotoro]"),aes(yintercept=0.168),linetype="dashed",lwd=0.25)+
   #geom_point(data=subset(win.df,value>=quantile(win.df$value,0.999)),shape=16,stroke=0.9,size=0.5,col="red")+
   geom_line(aes(y=rollmean),lwd=0.15,col="black")+
-  geom_segment(data=chr_labels,aes(x=start+25,xend=stop-25,y=-0.05,yend=-0.05,col=NA),col="black")+
+  geom_segment(data=chr_labels,aes(x=start+250,xend=stop-250,y=-0.025,yend=-0.025,col=NA),col="black")+
   geom_text(data=chr_labels,aes(label=chr,x=mid,y=-0.1,col=NA),
-                  col="black",size=2.25,angle=0,direction="y",box.padding = 0.15,
+                  col="black",size=1.9,angle=0,direction="y",box.padding = 0.15,
                   segment.size=0.2) +
   facet_grid(stat ~ ., labeller=label_parsed, scales="free_y") +
   theme(strip.background = element_rect(colour="black", fill="grey100"))
@@ -304,25 +305,27 @@ o <- ggplot(sweeps.top, aes(x=stat, y=mu)) +
 
 p <- ggplot(sweeps.top, aes(stat)) +
   theme_bw()+
-  geom_bar(color="black",fill = c("gray70","white","gray70","white"),width=0.75) +
+  geom_bar(color="black",fill = c("gray90","gray30","gray90","gray30"),width=0.75) +
   ylab("Number of candidate sweeps") +
   xlab("Genomic subset") +
   theme(axis.text.x = element_text(size=6))
 
 q <- ggplot(pi.df, aes(x=PI, fill=dataset)) +
   theme_bw() +
-  geom_density() +
-  scale_fill_viridis(discrete=TRUE,labels=c("megarhyncha","simulation")) +
+  geom_density(color="black",alpha=0.7) +
+  scale_fill_manual(values=c("gray90","gray30"),labels=c("  megarhyncha","  simulation")) +
+  #scale_fill_viridis(discrete=TRUE,labels=c("megarhyncha","simulation")) +
   theme(legend.position = c(0.7, 0.8),
         legend.box.background = element_rect(colour = "black"),
+        legend.text=element_text(size=9),
         legend.title = element_blank()) +
   xlab(~paste(pi)) +
   ylab("Count") +
   xlim(0,0.004)
 
-top <- plot_grid(n, align = 'h', labels = c("A"), label_size = 12, nrow = 1,label_y = 0.97)
+top <- plot_grid(n, align = 'h', labels = c("A"), label_size = 12, nrow = 1)
 bottom <- plot_grid(o, p, q, align = 'h', labels = c("B","C","D"), label_size = 12, nrow = 1)
-pdf("figures/final/Fig_4_selection.pdf",width=9,height=9,compress = TRUE)
+pdf("figures/final/Fig_4_selection.pdf",width=11,height=9,compress = TRUE)
 plot_grid(top, bottom, nrow=2, rel_heights = c(0.65,0.35))
 dev.off()
 
@@ -341,7 +344,7 @@ r <- ggplot(data=win.5,aes(x=row,y=value))+theme_bw()+
   ylab(ylab.text) +
   xlab("Position") +
   scale_y_continuous(breaks=seq(0,1.0,0.2),minor_breaks = NULL)+
-  geom_point(data=subset(win.5,value>0.0 & outlier=="FALSE"),size=1.25,shape=16,alpha=0.7,color="grey30")+
+  geom_point(data=subset(win.5,value>0.0 & outlier=="FALSE"),size=1,shape=16,alpha=0.7,color="grey30")+
   geom_point(data=subset(win.5, outlier=="TRUE"),size=1.5,shape=16,col="red")+
   geom_hline(aes(yintercept=0.409031),linetype="dashed",lwd=0.25)+
   facet_grid(. ~ chr_order, scales="free_x") +
@@ -496,9 +499,9 @@ b1 <- ggplot(df2, aes(df2$pi_toro)) +
   theme(axis.title.y=element_blank()) +
   geom_histogram(bins=100)
 
-top <- plot_grid(q,align = 'h', label_size = 12, nrow = 1)
+top <- plot_grid(r,align = 'h', label_size = 12, nrow = 1)
 middle <- plot_grid(s, t, u, v, w, x, align = 'h', label_size = 12, nrow = 1)
-bottom <- plot_grid(y, z, a1, a2, align = 'h', label_size = 12, nrow = 1)
-pdf("figures/final/S4_genome_scans.pdf",width=9,height=7)
+bottom <- plot_grid(y, z, a1, b1, align = 'h', label_size = 12, nrow = 1)
+pdf("figures/final/S3_genome_scans.pdf",width=9,height=7)
 plot_grid(top, middle, bottom, align = 'h', labels="AUTO", label_size = 12, nrow = 3, rel_heights = c(1.25,1,1))
 dev.off()
