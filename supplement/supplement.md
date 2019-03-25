@@ -4,12 +4,14 @@ Supplemental material for Linck et al. 2019, *bioRxiv*.
 
 ### Figures
 
-![ Supervised population assignments from `ADMIXTURE` for *K*=3](figS1.png)   
+![](figS1.png)   
+**Figure S1:** Supervised population assignments from `ADMIXTURE` for *K*=3   
+   
+![](figS2.png)   
+**Figure S2:** Diagrams of demographic models implemented in `moments`   
 
-![ Diagrams of demographic models implemented in `moments`](/Users/ethanlinck/Dropbox/syma_speciation/manuscript](figS2.png)   
-
-![ A) Pronounced peaks of relative genomic divergence on four chromosomes. 
-B) Correlations between summary statistics of genomic diversity and divergence. C) Distributions of summary statistics ](figS3.png)   
+![](figS3.png)     
+**Figure S3:** A) Pronounced peaks of relative genomic divergence on four chromosomes. B) Correlations between summary statistics of genomic diversity and divergence. C) Distributions of summary statistics  
 
 ### Tables
 
