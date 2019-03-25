@@ -2,6 +2,10 @@
 
 Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and phenotype data. A complete digital notebook recording commands for processing and analyzing data is found in `pipeline.md.`  
   
+### Supplemental Material  
+  
+All supplemental figures, tables, and captions are found in the `supplement/` subdirectory.  
+    
 ### Scripts  
   
 (in `scripts/` subdirectory)  
