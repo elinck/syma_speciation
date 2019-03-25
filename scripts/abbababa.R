@@ -1,4 +1,5 @@
 #d-test summaries
+<<<<<<< HEAD
 
 library(pbapply)
 library(data.table)
@@ -7,6 +8,11 @@ library(plyr)
 library(ggplot2)
 library(viridis)
 
+=======
+install.packages("ggridges", repo = "http://ftp.osuosl.org/pub/cran/"); 
+library(pbapply);library(data.table);library(ggridges);library(plyr);library(ggplot2);library(viridis)
+install.packages("pbapply")
+>>>>>>> 45f76e11f7a75d4bdee57cd4df28807c7a9d53c5
 setwd("~/Dropbox/syma_speciation/")
 
 d <- fread("raw_data/out.txt",data.table = F)
