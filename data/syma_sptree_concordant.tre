@@ -1,0 +1,320 @@
+#NEXUS 
+Begin taxa;
+	Dimensions ntax=4;
+	Taxlabels
+		h_senegalensis
+		s_torotoro
+		s_megarhyncha
+		s_ochracea
+		;
+End;
+
+Begin trees;  [Treefile saved Wed Oct 16 13:31:00 2019]
+[!>Trees found during each SVDQuartets bootstrap replicate using data file 'infile.nex'...]
+	Translate
+		1 h_senegalensis,
+		2 s_torotoro,
+		3 s_megarhyncha,
+		4 s_ochracea
+		;
+
+[Trees found in bootstrap replicate #1]
+tree B_1.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #2]
+tree B_2.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #3]
+tree B_3.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #4]
+tree B_4.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #5]
+tree B_5.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #6]
+tree B_6.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #7]
+tree B_7.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #8]
+tree B_8.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #9]
+tree B_9.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #10]
+tree B_10.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #11]
+tree B_11.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #12]
+tree B_12.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #13]
+tree B_13.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #14]
+tree B_14.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #15]
+tree B_15.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #16]
+tree B_16.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #17]
+tree B_17.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #18]
+tree B_18.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #19]
+tree B_19.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #20]
+tree B_20.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #21]
+tree B_21.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #22]
+tree B_22.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #23]
+tree B_23.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #24]
+tree B_24.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #25]
+tree B_25.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #26]
+tree B_26.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #27]
+tree B_27.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #28]
+tree B_28.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #29]
+tree B_29.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #30]
+tree B_30.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #31]
+tree B_31.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #32]
+tree B_32.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #33]
+tree B_33.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #34]
+tree B_34.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #35]
+tree B_35.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #36]
+tree B_36.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #37]
+tree B_37.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #38]
+tree B_38.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #39]
+tree B_39.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #40]
+tree B_40.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #41]
+tree B_41.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #42]
+tree B_42.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #43]
+tree B_43.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #44]
+tree B_44.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #45]
+tree B_45.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #46]
+tree B_46.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #47]
+tree B_47.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #48]
+tree B_48.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #49]
+tree B_49.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #50]
+tree B_50.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #51]
+tree B_51.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #52]
+tree B_52.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #53]
+tree B_53.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #54]
+tree B_54.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #55]
+tree B_55.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #56]
+tree B_56.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #57]
+tree B_57.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #58]
+tree B_58.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #59]
+tree B_59.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #60]
+tree B_60.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #61]
+tree B_61.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #62]
+tree B_62.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #63]
+tree B_63.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #64]
+tree B_64.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #65]
+tree B_65.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #66]
+tree B_66.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #67]
+tree B_67.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #68]
+tree B_68.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #69]
+tree B_69.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #70]
+tree B_70.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #71]
+tree B_71.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #72]
+tree B_72.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #73]
+tree B_73.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #74]
+tree B_74.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #75]
+tree B_75.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #76]
+tree B_76.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #77]
+tree B_77.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #78]
+tree B_78.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #79]
+tree B_79.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #80]
+tree B_80.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #81]
+tree B_81.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #82]
+tree B_82.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #83]
+tree B_83.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #84]
+tree B_84.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #85]
+tree B_85.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #86]
+tree B_86.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #87]
+tree B_87.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #88]
+tree B_88.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #89]
+tree B_89.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #90]
+tree B_90.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #91]
+tree B_91.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #92]
+tree B_92.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #93]
+tree B_93.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #94]
+tree B_94.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #95]
+tree B_95.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #96]
+tree B_96.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #97]
+tree B_97.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #98]
+tree B_98.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #99]
+tree B_99.1 = [&U] [&W 1] (1,(2,3),4);
+
+[Trees found in bootstrap replicate #100]
+tree B_100.1 = [&U] [&W 1] (1,(2,3),4);
+end;
