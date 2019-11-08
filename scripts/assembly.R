@@ -143,22 +143,3 @@ for(i in 1:length(bams)){
 for(i in 1:length(bams)){
   system(commands[i])
 }
-
-### assemble mtDNA genomes
-paths <- list.files("/media/burke/bigMac/ethan/syma_raw",full.names=T) %>% grep("R1",.,value=T)
-names <- list.files("/media/burke/bigMac/ethan/syma_raw",full.names=F) %>% grep("R1",.,value=T)
-commands <- c()
-sampleID <- c()
-for(i in 1:length(names)){
-  sampleID[i] <- names[i] %>% strsplit("_R1.fastq.gz") %>% unlist() %>% .[1]
-  commands[i] <- paste0("mkdir ", sampleID[i], ";",
-                        " cd ", sampleID[i], ";",
-                        " /media/burke/bigMac/ethan/mtDNA/MITObim/MITObim.pl -start 1 -end 5 -sample ", sampleID[i],
-                        " -ref syma_mtdna", i,
-                        " -readpool ", paths[i],
-                        " -quick /media/burke/bigMac/ethan/mtDNA/t_sanctus_ref.fasta &> log;")
-}
-
-for(i in 1:length(paths)){
-  system(commands[i])
-}
