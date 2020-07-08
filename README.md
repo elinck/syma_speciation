@@ -6,7 +6,7 @@ Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and p
 
 (in `scripts/` subdirectory)  
 
-`assembly.R:` Pipeline for assembling sequencing reads against *Halcyon senegaloides* draft genome.  
+`assembly.R:` Pipeline for assembling sequencing reads against *Halcyon senegalensis* draft genome.  
 
 `genotype_analysis.R:` Analysis of genotypic data and demographic inference output.
 
@@ -61,5 +61,3 @@ Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and p
 `syma_spp_pcs_wgs.csv:` PCA results without hyRAD data.   
 
 `tor_sizes.csv:` Population size estimates for *S. torotoro* inferred from *moments*.   
-
-
