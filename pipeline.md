@@ -269,21 +269,6 @@ vcftools --vcf syma.wgs.6x.moments.recode.vcf --thin 50000 --recode --recode-INF
 
 (After filtering, kept 4492 out of a possible 78882912 sites.)
 
-
-For sliding window summary statistics, we'll call invariant sites along with variants for our largest (huge) `.vcf`, with a minQ score of 30 and a minDP of 3:
-
-```
-vcftools --gzvcf syma_recal_gatk_all.vcf.gz --remove hyrad.bams --minQ 30 --minDP 3  --recode --recode-INFO-all --out syma.wgs.all
-```
-
-To create a SNP alignment for SVD quartets, we'll drop sites with more than 10% missing data, use a minimum minor allele count of 3, a minimum depth of 5x, and a maximum depth of 120x:
-
-```
-vcftools --vcf syma_recal_gatk.vcf --remove hyrad.bams --max-missing 0.9 --mac 3 --max-alleles 2 --minDP 5 --maxDP 120 --minQ 30 --recode --recode-INFO-all --out syma.svd
-```
-
-(After filtering, kept 283485 out of a possible 78882912 sites.)
-
 ## Morphology and bioacoustic analysis
 
 We used the `R` scripts `morphology_analysis.R` and `vocalization_analysis.R` to analyse morphological data (`data/morphology.csv`)
@@ -291,57 +276,30 @@ and bioacoustic data (`data/params.csv`), respectively.
 
 ## Genotype analysis
 
-We used the `R` script `genotype_analysis` to process `.vcf` data and prepare datasets the analyses below.
+We used the `R` script `genotype_analysis` to process `.vcf` data for PCA, and extract results from the output of demographic inference in *moments* (see below). 
 
 ## BEAST
 
 We ran BEAST via the [CIPRES Science Gateaway](https://www.phylo.org/) using the .xml file `data/syma_nd2_final.xml`, which we generated in BEAUTi.
 
-## SVDquartets
-
-To generate the nuclear DNA phylogeny without species assignments, we use the bash script `scripts/ref_nuDNA.sh`. This script extracts the reference sequence from a .vcf, turns the the .vcf into a fasta file using [vcf2phylip](https://github.com/edgardomortiz/vcf2phylip) (required!), and then concatenates the reference sequence with the fasta. As they come from the same source, there is no additional alignment necessary.
-
-```
-bash ref_nuDNA.sh
-```
-
-We then run SVDquartets via the [CIPRES Science Gateaway](https://www.phylo.org/) using the nexus file `data/syma_nuc.nexus`. To infer species tree using SVDquartets, we swap this file out for the file `data/syma_sptree.nexus`.
-
-
-## *D*-tests
-
-To perform bootstrapped *D*-tests (ABBA-BABA tests), we run the python script `scripts/d_tests.py`:
-
-```
-python d_tests.py
-```
-
 ## Moments
 
 Requires [Moments](https://bitbucket.org/simongravel/moments).  
 
-To perform demographic inference in moments, we'll run each the IM model script (`scripts/IM_moments.py)`, then use the output in a second script to generate bootstrap replicates (`scripts/IM_moments.py)`, import and process the output from this in `genotype_analysis.R`, and then plot in `plotting.R`.
+To perform demographic inference in moments, we'll run each script (`scripts/syma_*.py)`, then use the output from our best-fit model and generate bootstrap replicates (`scripts/_SC_bootstrap.py)`. We will import and process the output from this in `genotype_analysis.R`. 
 
 ```
-python IM_moments.py;
-python IM_moments.py;
+python syma_jSFS.py;
+python syma_SI.py;
+python syma_SC.py;
+python syma_IMg.py;
+python syma_SIg.py;
+python syma_AM.py;
+python syma_SCg.py;
+python syma_AMg.py;
+python syma_IM.py;
+python syma_SC_bootstrap.py
 ```
-
-## Windowed stats
-
-Requires scripts from Simon Martin's [`genomics_general`](https://github.com/simonhmartin/genomics_general) repository.  
-
-
-First, we use the script `parseVCF.py` to convert our vcf (with invariant sites) to the `.geno` custom file format.
-```
-python VCF_processing/parseVCF.py -i /media/burke/bigMac/ethan/alignment/recalibrated/syma.wgs.all.recode.vcf.gz --skipIndels | gzip > all.output.geno.gz
-```
-
-We then run `popgenWindows.py` with coordinate-based 50kb windows with a 10kb step size:
-```
-python popgenWindows.py -w 50000 -s 10000 --windType coordinate -g all.output.geno.gz -o syma_windows.csv.gz -f phased -T 24 -p meg EL19_mega,EL18_mega,EL20_mega,EL1_mega,EL23_mega,EL24_mega,EL27_mega,EL40_toro,EL4_mega,EL6_mega -p toro EL10_toro,EL11_toro,EL13_toro,EL21_toro,EL32_toro,EL39_toro,EL8_toro,EL9_toro;
-```
-
 ## Oneliners  
 
 Various bash oneliners for coverage calculations, etc., are found in `oneliners.sh`.

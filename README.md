@@ -1,4 +1,4 @@
-# Analysis of *Syma* spp. genotypes, phenotypes for Linck et al. 2019
+# Analysis of *Syma* spp. genotypes, phenotypes for Linck et al. *in prep*
 
 Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and phenotype data. A digital notebook recording commands for processing and analyzing data is found in `pipeline.md.`  
 
@@ -6,15 +6,9 @@ Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and p
 
 (in `scripts/` subdirectory)  
 
-`IM_moments.py:` Model for demographic inference with [moments](https://bitbucket.org/simongravel/moments)  
-
-`IM_moments_bootstraps.py:` Model for demographic inference with [moments](https://bitbucket.org/simongravel/moments)  
-
 `assembly.R:` Pipeline for assembling sequencing reads against *Halcyon senegaloides* draft genome.  
 
-`d_tests.py` Script for performing *D*-tests.  
-
-`genotype_analysis.R:` Analysis of genotypic data.
+`genotype_analysis.R:` Analysis of genotypic data and demographic inference output.
 
 `morphology_analysis.R:` Analysis of morphological data.  
 
@@ -24,9 +18,7 @@ Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and p
 
 `plotting.R:` Make figures for manuscript.  
 
-`ref_nuDNA.sh:` Generate alignment for SVDquartets.
-
-`smcpp_run.sh:` Run `SMC++` for bootstrapped data.   
+`syma_*.py`: Python scripts to generate joint site frequency spectra and fit demographic models in *moments*
 
 `unified_genotyper_all.sh:` Command to run [UnifiedGenotyper](https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_genotyper_UnifiedGenotyper.php) on all samples.  
 
@@ -38,11 +30,11 @@ Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and p
 
 `Syma_*:` Shape files for plotting range maps.
 
-`chr_labels.csv:` Chromosome coordinates for manhattan plots.  
-
 `coverage.txt:` Per-sample coverage.  
 
-`d_d3*csv:` *D*-test results.   
+`meg_sizes.csv:` Population size estimates for *S. megarhyncha* inferred from *moments*.   
+
+`migration_rate.csv:` Inferred rates of gene flow from *moments*.  
 
 `morphology.csv:` Morphological data from specimens.  
 
@@ -50,17 +42,9 @@ Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and p
 
 `percent_mapped.txt:` Read mapping results.  
 
-`syma.svd.tre:` SVDquartets lineage tree.
-
 `syma_ND2.tree:` ND2 tree.
 
 `syma_nd2_final.xml:` BEAST .xml input file.
-
-`syma_nuc.fasta:` Fasta alignment of nuclear DNA data.
-
-`syma_nuc.nexus:` Nexus alignment of nuclear DNA data for SVDquartets.
-
-`syma_nuc_d3.fasta` Fasta alignment of nuclear DNA data for *D*-tests.
 
 `syma_spp_calls.csv:` Processed bioacoustic data.  
 
@@ -68,14 +52,14 @@ Repository for analysis of *Syma torotoro* and *Syma megarhyncha* genotype and p
 
 `syma_spp_morphology.csv:` Morphology data before processing.  
 
+`syma_spp_morphology_log.csv:` Log-transformed morphology data.   
+
 `syma_spp_pcs.csv:` PCA results.  
 
-`syma_sptree.nexus:` Nexus alignment of nuclear DNA data for SVDquartets species tree analysis.  
+`syma_spp_pcs_old.csv:` PCA results without modern samples.   
 
-`syma_sptree_concordant.tre:` Species tree from SVDquartets.
+`syma_spp_pcs_wgs.csv:` PCA results without hyRAD data.   
 
-`window_correlations.csv:` Dataframe for plotting correlations between windowed summary statistics.  
+`tor_sizes.csv:` Population size estimates for *S. torotoro* inferred from *moments*.   
 
-`window_stats.csv:` Raw data from sliding window analyses (big).   
 
-`window_stats_chr.csv:` Processed data from sliding window analyses for plotting (big).  
