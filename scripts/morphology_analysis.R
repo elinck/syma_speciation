@@ -48,6 +48,15 @@ data<-cbind(pca$x, data) # combining the PC scores with the old dataframe
 useful <- clustvarsel(pca$x, verbose = TRUE) # test to determine which PCs are most useful for group discrimination in NMMs
 write.csv(data, "data/syma_spp_morphology.csv")
 
+# perform PCA w/ log data, export df
+pca<-prcomp(log10(data[,14:19]), scale. = TRUE)
+pca$rotation # PC loadings
+summary(pca) # variance by axis
+pca$x  # scores for each individual on each PC axis
+data<-cbind(pca$x, data) # combining the PC scores with the old dataframe 
+useful <- clustvarsel(pca$x, verbose = TRUE) # test to determine which PCs are most useful for group discrimination in NMMs
+write.csv(data, "data/syma_spp_morphology_log.csv")
+
 # evaluate the three species model w/ clustering, recommended PC scores
 PCs <- data[,1:2]
 table(three_species)

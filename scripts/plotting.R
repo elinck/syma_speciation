@@ -2,6 +2,7 @@
 
 library(ggtree)
 library(treeio)
+library(tidyr)
 library(ape)
 library(cowplot)
 library(ggplot2)
@@ -53,8 +54,8 @@ mega_range <- fortify(mega_range)
 
 # plot map
 a <- ggplot()+coord_map()+theme_classic()+ylim(-14.5,2)+xlim(129,154)+
-  scale_fill_viridis()+
-  scale_shape_discrete(solid = F)+
+  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"))+
+  scale_shape_manual(values=c(22, 24, 21)) +
   #scale_fill_manual(name="species",values = c("grey45","grey85"))+
   theme(panel.grid=element_blank(),axis.ticks = element_blank(),axis.title = element_blank(),
         axis.text = element_blank())+
@@ -63,10 +64,12 @@ a <- ggplot()+coord_map()+theme_classic()+ylim(-14.5,2)+xlim(129,154)+
   geom_polygon(data=mega_range, aes(x=long,y=lat,group=group),fill="gray40")+
   #geom_path(data=state,aes(x=long,y=lat,group=group),col="grey",lwd=0.25)+
   geom_path(data=map,aes(x=long,y=lat,group=group))+
-  geom_point(data=sample_data,aes(x=long,y=lat,fill=PC1,size=sample_data$size), pch=21, alpha=0.85,stroke=1) +
+  geom_point(data=sample_data,aes(x=long,y=lat,fill=sp,shape=sp,size=sample_data$size), alpha=0.85,stroke=1) +
   scale_size_continuous(range = c(3,8), breaks = c(1,2,3),name = "Samples") +
+  labs(fill="Species",shape="Species") +
+  guides(fill = guide_legend(override.aes = list(size=5)))+
   theme(legend.text=element_text(size=15),
-        legend.title=element_text(size=15)) #+
+        legend.title=element_text(size=15))
 #theme(legend.justification=c(1,1), legend.position=c(1,1))
 
 # convex hull for PCA
@@ -79,22 +82,89 @@ hull_ochr <- sample_data[sample_data$sp=="ochracea",] %>%
 
 # pca
 b <- ggplot(data=sample_data,aes(x=PC1,y=PC2,fill=sp,color=sp)) + 
-  geom_point(pch=1) +
-  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"))+
+  geom_point(aes(shape=sp)) +
+  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"),guide=FALSE)+
   scale_color_manual(values = c("#73D056FF","#20938CFF","#443B84FF"), guide=FALSE)+
+  scale_shape_manual(values=c(22, 24, 21),guide=FALSE) +
   theme_classic() +
   xlab("Genotype PC1") +
   ylab("Genotype PC2") +
   geom_polygon(data = hull_tor, alpha = 0.5) +
   geom_polygon(data = hull_meg, alpha = 0.5) +
   geom_polygon(data = hull_ochr, alpha = 0.5) +
-  labs(fill="Species") +
   theme(legend.text=element_text(size=15),
         axis.title = element_text(size=15),
         axis.text = element_text(size=15),
         legend.title=element_text(size=15))
 
+# subset to show clustering results unaffected by hyrad data
+sample_data_wgs <- read.csv("data/syma_spp_pcs_wgs.csv")
+sample_data_wgs$sp <- as.character(sample_data_wgs$sp)
+sample_data_wgs$sp[which(sample_data_wgs$ssp == "ochracea")] <- "ochracea"
+sample_data_wgs$sp <- as.factor(sample_data_wgs$sp)
+
+# convex hull for PCA, subset data
+hull_tor <- sample_data_wgs[sample_data_wgs$sp=="torotoro",] %>%
+  slice(chull(PC1, PC2))
+hull_meg <- sample_data_wgs[sample_data_wgs$sp=="megarhyncha",] %>%
+  slice(chull(PC1, PC2))
+hull_ochr <- sample_data_wgs[sample_data_wgs$sp=="ochracea",] %>%
+  slice(chull(PC1, PC2))
+
+# version for supplement, wgs data only: 
+b.2 <- ggplot(data=sample_data_wgs,
+              aes(x=PC1,y=PC2,fill=sp,color=sp)) + 
+  geom_point(aes(shape=sp)) +
+  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"),guide=FALSE)+
+  scale_color_manual(values = c("#73D056FF","#20938CFF","#443B84FF"), guide=FALSE)+
+  scale_shape_manual(values=c(22, 24, 21), guide=FALSE) +
+  theme_classic() +
+  xlab("Genotype PC1") +
+  ylab("Genotype PC2") +
+  geom_polygon(data = hull_tor, alpha = 0.5) +
+  geom_polygon(data = hull_meg, alpha = 0.5) +
+  geom_polygon(data = hull_ochr, alpha = 0.5) +
+  theme(legend.text=element_text(size=15),
+        axis.title = element_text(size=15),
+        axis.text = element_text(size=15),
+        legend.title=element_text(size=15))
+
+# subset to show clustering results unaffected by excluding modern data
+sample_data_old <- read.csv("data/syma_spp_pcs_old.csv")
+sample_data_old$sp <- as.character(sample_data_old$sp)
+sample_data_old$sp[which(sample_data_old$ssp == "ochracea")] <- "ochracea"
+sample_data_old$sp <- as.factor(sample_data_old$sp)
+
+# convex hull for PCA, subset data
+hull_tor <- sample_data_old[sample_data_old$sp=="torotoro",] %>%
+  slice(chull(PC1, PC2))
+hull_meg <- sample_data_old[sample_data_old$sp=="megarhyncha",] %>%
+  slice(chull(PC1, PC2))
+hull_ochr <- sample_data_old[sample_data_old$sp=="ochracea",] %>%
+  slice(chull(PC1, PC2))
+
+# version for supplement, wgs data only: 
+b.3 <- ggplot(data=sample_data_old,
+              aes(x=PC1,y=PC2,fill=sp,color=sp)) + 
+  geom_point(aes(shape=sp)) +
+  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"),guide=FALSE)+
+  scale_color_manual(values = c("#73D056FF","#20938CFF","#443B84FF"), guide=FALSE)+
+  scale_shape_manual(values=c(22, 24, 21), guide=FALSE) +
+  theme_classic() +
+  xlab("Genotype PC1") +
+  ylab("Genotype PC2") +
+  geom_polygon(data = hull_tor, alpha = 0.5) +
+  geom_polygon(data = hull_meg, alpha = 0.5) +
+  geom_polygon(data = hull_ochr, alpha = 0.5) +
+  theme(legend.text=element_text(size=15),
+        axis.title = element_text(size=15),
+        axis.text = element_text(size=15),
+        legend.title=element_text(size=15))
+
+# plot vocalization data
 vdata <- read.csv("data/syma_spp_calls.csv")
+
+# PC1 only
 c <- ggplot(vdata, aes(x=PC1, fill = two_species)) + 
   theme_classic() +
   scale_fill_manual(values = c("#73D056FF","#443B84FF"))+
@@ -109,8 +179,34 @@ c <- ggplot(vdata, aes(x=PC1, fill = two_species)) +
         axis.text = element_text(size=15),
         legend.title=element_text(size=15))
 
+hull_tor <- vdata[vdata$two_species=="torotoro",] %>%
+  slice(chull(PC1, PC2))
+hull_meg <- vdata[vdata$two_species=="megarhyncha",] %>%
+  slice(chull(PC1, PC2))
+hull_ochr <- vdata[vdata$two_species=="ochracea",] %>%
+  slice(chull(PC1, PC2))
+
+c.2 <- ggplot(data=vdata,aes(x=PC1,y=PC2,fill=two_species,color=two_species)) + 
+  geom_point(aes(shape=two_species)) +
+  scale_fill_manual(values = c("#73D056FF","#443B84FF"),guide=FALSE)+
+  scale_color_manual(values = c("#73D056FF","#443B84FF"), guide=FALSE)+
+  scale_shape_manual(values=c(22, 24, 21),guide=FALSE) +
+  theme_classic() +
+  xlab("Acoustic PC1") +
+  ylab("Acoustic PC2") +
+  geom_polygon(data = hull_tor, alpha = 0.5) +
+  geom_polygon(data = hull_meg, alpha = 0.5) +
+  geom_polygon(data = hull_ochr, alpha = 0.5) +
+  labs(fill="Species") +
+  theme(legend.text=element_text(size=15),
+        axis.title = element_text(size=15),
+        axis.text = element_text(size=15),
+        legend.title=element_text(size=15))  
+
 # plot morphology
-mdata <- read.csv("data/syma_spp_morphology.csv")
+mdata <- read.csv("data/syma_spp_morphology_log.csv")
+
+# PC1 only
 d <- ggplot(mdata, aes(x=PC1, fill = three_species_model)) + 
   theme_classic() +
   scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"))+
@@ -125,7 +221,81 @@ d <- ggplot(mdata, aes(x=PC1, fill = three_species_model)) +
         axis.text = element_text(size=15),
         legend.title=element_text(size=15))
 
-top <- plot_grid(a,b,c,d,labels="AUTO",nrow=1,rel_widths=c(1.5,0.75,0.5,0.5))
+# convex hull for full PCA plot
+hull_tor <- mdata[mdata$three_species_model=="torotoro",] %>%
+  slice(chull(PC1, PC2))
+hull_meg <- mdata[mdata$three_species_model=="megarhyncha",] %>%
+  slice(chull(PC1, PC2))
+hull_ochr <- mdata[mdata$three_species_model=="ochracea",] %>%
+  slice(chull(PC1, PC2))
+
+d.2 <- ggplot(data=mdata,aes(x=PC1,y=PC2,fill=three_species_model,color=three_species_model)) + 
+  geom_point(aes(shape=three_species_model)) +
+  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"),guide=FALSE)+
+  scale_color_manual(values = c("#73D056FF","#20938CFF","#443B84FF"), guide=FALSE)+
+  scale_shape_manual(values=c(22, 24, 21),guide=FALSE) +
+  theme_classic() +
+  xlab("Morphological PC1") +
+  ylab("Morphological PC2") +
+  geom_polygon(data = hull_tor, alpha = 0.5) +
+  geom_polygon(data = hull_meg, alpha = 0.5) +
+  geom_polygon(data = hull_ochr, alpha = 0.5) +
+  labs(fill="Species") +
+  theme(legend.text=element_text(size=15),
+        axis.title = element_text(size=15),
+        axis.text = element_text(size=15),
+        legend.title=element_text(size=15))  
+
+# faceted traits for supplement
+mdata_sub <- cbind.data.frame(mdata$three_species_model,mdata$sex,mdata$bill_from_nostril,mdata$bill_width,mdata$bill_depth,
+                              mdata$tarsus,mdata$wing_chord,mdata$tail_length)
+colnames(mdata_sub) <- c("three_species_model", "sex", "Bill from nostril", "Bill width", "Bill depth", "Tarsus",
+                     "Wing chord", "Tail length")
+mdata_tidy <- gather(mdata_sub, `Bill from nostril`, `Bill width`, `Bill depth`, `Tarsus`, `Wing chord`, `Tail length`, key="trait",value="Millimeters")
+
+d.3 <- ggplot(mdata_tidy) +
+  theme_bw() +
+  #geom_density(aes(x=Millimeters,fill=three_species_model), alpha=0.5) +
+  geom_histogram(aes(x=Millimeters,fill=three_species_model), bins=22) +
+  scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF")) +
+  facet_wrap(~trait, scales="free") +
+  labs(fill="Species")  +
+  ylab("Density") +
+  theme(panel.grid = element_blank(),
+        legend.position = "bottom")
+
+d.4 <- ggplot(mdata_tidy[mdata_tidy$three_species_model=="torotoro",]) +
+  theme_bw() +
+  #geom_density(aes(x=Millimeters,fill=sex), alpha=0.5) +
+  geom_histogram(aes(x=Millimeters,fill=sex), bins=22) +
+  #scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"), guide=FALSE) +
+  facet_wrap(~trait, scales="free") +
+  labs(fill="Sex")  +
+  ylab("Density") +
+  theme(panel.grid = element_blank(),
+        legend.position = "bottom")
+
+d.5 <- ggplot(mdata_tidy[mdata_tidy$three_species_model=="megarhyncha",]) +
+  theme_bw() +
+  #geom_density(aes(x=Millimeters,fill=sex), alpha=0.5) +
+  geom_histogram(aes(x=Millimeters,fill=sex), bins=22) +
+  #scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"), guide=FALSE) +
+  facet_wrap(~trait, scales="free") +
+  labs(fill="Sex")  +
+  ylab("Density") +
+  theme(panel.grid = element_blank(),
+        legend.position = "bottom")
+
+d.6 <- ggplot(mdata_tidy[mdata_tidy$three_species_model=="ochracea",]) +
+  theme_bw() +
+  #geom_density(aes(x=Millimeters,fill=sex), alpha=0.5) +
+  geom_histogram(aes(x=Millimeters,fill=sex), bins=22) +
+  #scale_fill_manual(values = c("#73D056FF","#20938CFF","#443B84FF"), guide=FALSE) +
+  facet_wrap(~trait, scales="free") +
+  labs(fill="Sex")  +
+  ylab("Density") +
+  theme(panel.grid = element_blank(),
+        legend.position = "bottom")
 
 # read mcc ND2 tree from beast
 beast <- read.beast("~/Dropbox/syma_speciation/data/syma_ND2.tree")
@@ -189,260 +359,26 @@ e$data$height_0.95_HPD[[41]]
 # estimate of intra torotoro divergence
 (304804.8+552355.0)/2 #428579.9
 
-# SVDquartets trees
-svdq <- ape::read.nexus("~/Dropbox/syma_speciation/data/syma.svd.tre")
-consens <- ape::consensus(svdq, p=0.5)
-consens <- root(consens, 1)
-bs <- prop.clades(consens, svdq, rooted = TRUE)
-consens <- fortify(consens)
-consens$bs <- c(rep(NA, 20), bs)
-consens$label[15] <- "EL40_mega"
-
-clr2 <- consens$label[1:20]
-clr2[grepl("toro",clr2)]<-"#443B84FF" 
-clr2[grepl("mega",clr2)]<-"#73D056FF"
-clr2[grepl("ochr",clr2)]<-"#20938CFF"
-clr2[1] <- "black"
-
-# root tree
-f <- ggtree(consens) + 
-  theme_tree() +
-  #geom_tiplab(align=TRUE, linetype='dashed', linesize=.3, color=clr2) + 
-  xlim(-1,10) +
-  geom_nodelab(aes(label=bs,size=5),vjust=-0.4,hjust=1.1)+
-  geom_tippoint(color=clr2,alpha=0.5,size=5,shape=15) #+
-
-# plot svdq species trees
-sptree <- ape::read.nexus("~/Dropbox/syma_speciation/data/syma_sptree_concordant.tre")
-consens <- ape::consensus(sptree, p=0.5)
-consens <- root(consens, 1)
-bs <- prop.clades(consens, sptree, rooted = TRUE)
-consens <- fortify(consens)
-consens$bs <- c(rep(NA, 4), bs)
-clr3 <- consens$label[1:4]
-clr3[grepl("toro",clr3)]<-"#443B84FF" 
-clr3[grepl("mega",clr3)]<-"#73D056FF"
-clr3[grepl("ochr",clr3)]<-"#20938CFF"
-clr3[1] <- "black"
-
-g <- ggtree(consens) +
-  theme_tree() +
-  xlim(-1,5) +
-  geom_tippoint(color=clr3,alpha=0.5,size=15,shape=15) +
-  geom_nodelab(aes(label = bs),size=5,vjust=-0.4,hjust=1.1)
-
-h <- readPNG("~/Dropbox/syma_speciation/figures/syma_2x1.png")
+# load kingfisher picture
+h <- readPNG("~/Dropbox/syma_speciation/ignore/figures/syma_2x1.png")
 h <- rasterGrob(h)
 
-top <- plot_grid(a,h,nrow=1,labels=c("A","B"),rel_widths = c(1.25,1))
-middle <- plot_grid(b,c,d, nrow=1,labels=c("C","D","E"), rel_widths = c(1.75,1,1))
-bottom <- plot_grid(e,f,g,nrow=1,labels=c("F","G","H"),rel_widths = c(1.5,1,1))
-fig1 <- plot_grid(top,middle,bottom,labels=NULL,nrow=3,rel_heights = c(1,0.8,1))
+# generate panels for figure 1
+top <- plot_grid(a,e,h,nrow=1,labels=c("A","B","C"),rel_widths = c(1.9,1,1))
+bottom <- plot_grid(b,c.2,d.2,nrow=1,labels=c("D","E","F"),rel_widths = c(1,1,1))
+fig1 <- plot_grid(top,bottom,labels=NULL,nrow=2,rel_heights = c(1.25,1))
 
 # write to file
-pdf("figures/syma_1.pdf", width=14,height=12)
+png("manuscript/syma_1_rev.png",res=300,width=14.5,height=7.5,units="in")
 fig1
 dev.off()
 
-# figure 2
-dstat.df <- read.csv("data/dstats.csv")
-ititle <- expression(paste(italic("D"), "-tests"))
-i <-  ggplot(dstat.df, aes(x=D,fill=topology)) + 
-  theme_classic() +
-  guides(fill=guide_legend(title="Topology"))+
-  scale_fill_manual(values=c("grey90","grey60","grey30")) +
-  xlim(-0.1,0.5) +
-  #scale_x_continuous(breaks=c(-0.1,0.0,0.1,0.2,0.3,0.4,0.5)) +
-  geom_vline(xintercept=0.0,linetype="dashed",color="red",size=1) +
-  geom_histogram(bins=90, alpha=0.6,color="black")+
-  labs(title=ititle) +
-  ylab("Count") +
-  xlab(expression(italic("D")))+
-  #facet_wrap(~topology, scales="free") +
-  theme(legend.text=element_text(size=15),
-        axis.title = element_text(size=15),
-        axis.text = element_text(size=15),
-        legend.title=element_text(size=15),
-        plot.title = element_text(size=15))
-
-mig_real.df <- read.csv("data/real_migration_rate.csv")
-tmp2 <- ggplot(mig_real.df, aes(x=value, fill = parameter)) + 
-  theme_classic() +
-  guides(fill=guide_legend(title="Parameter"))+
-  scale_fill_manual(values=c("#32a852","#8c32a8")) +
-  geom_histogram(bins=50, alpha=0.6,color="black")+
-  ylab("Count") +
-  xlab("Migration rate") +
-  labs(title="Migration rate by time period") +
-  theme(legend.text=element_text(size=15),
-        axis.title = element_text(size=15),
-        axis.text = element_text(size=15),
-        legend.title=element_text(size=15),
-        plot.title = element_text(size=15))
-
-time.df <- read.csv("data/divergence_times.csv")
-tmp3 <- ggplot(time.df, aes(x=value, fill = parameter)) + 
-  theme_classic() +
-  guides(fill=guide_legend(title="Parameter"))+
-  scale_fill_manual(values=c("#32a852","#8c32a8","#ffbf00")) +
-  geom_histogram(bins=50, alpha=0.6,color="black")+
-  ylab("Count") +
-  xlab("Years") +
-  labs(title="Divergence time") +
-  theme(legend.text=element_text(size=15),
-        axis.title = element_text(size=15),
-        axis.text = element_text(size=15),
-        legend.title=element_text(size=15),
-        plot.title = element_text(size=15))
-
-meg.df <- read.csv("data/meg_sizes.csv")
-tmp4title <- expression(paste(italic("S. megarhyncha"), " population size"))
-tmp4 <- ggplot(meg.df, aes(x=value, fill = parameter)) + 
-  theme_classic() +
-  guides(fill=guide_legend(title="Parameter"))+
-  scale_fill_manual(values=c("#32a852","#8c32a8","#ffbf00")) +
-  geom_histogram(bins=50, alpha=0.6,color="black")+
-  ylab("Count") +
-  xlab("Population") +
-  labs(title = tmp4title) +
-  scale_x_continuous(breaks=c(3e+05,5e+05,7e+05,9e+05)) +
-  theme(legend.text=element_text(size=15),
-        axis.title = element_text(size=15),
-        axis.text = element_text(size=15),
-        legend.title=element_text(size=15),
-        plot.title = element_text(size=15))
-
-meg.df <- read.csv("data/tor_sizes.csv")
-tmp5title <- expression(paste(italic("S. torotoro"), " population size"))
-tmp5 <- ggplot(tor.df, aes(x=value, fill = parameter)) + 
-  theme_classic() +
-  guides(fill=guide_legend(title="Parameter"))+
-  scale_fill_manual(values=c("#32a852","#8c32a8","#ffbf00")) +
-  geom_histogram(bins=50, alpha=0.6,color="black")+
-  ylab("Count") +
-  xlab("Population") +
-  labs(title = tmp5title) +
-  scale_x_continuous(breaks=c(3e+05,5e+05,7e+05,9e+05)) +
-  theme(legend.text=element_text(size=15),
-        axis.title = element_text(size=15),
-        axis.text = element_text(size=15),
-        legend.title=element_text(size=15),
-        plot.title = element_text(size=15))
-
-j  <- plot_grid(tmp2,tmp3,tmp4,tmp5, nrow=2)
-fig2 <- plot_grid(i,j,labels=c("A","B"),nrow=2,rel_heights = c(0.3,0.7))
-pdf("figures/syma_2.pdf", width=9,height=10)
-fig2
+# write supplement pca plots to file
+png("manuscript/syma_S1.png",res=300,width=8,height=4,units="in")
+plot_grid(b.2,b.3,labels="AUTO",nrow=1)
 dev.off()
 
-### figure 3
-win.df <- read.csv("data/window_stats_chr.csv")[,-1]
-n <- ggplot(data=win.df,aes(x=row,y=value,col=chr))+
-  theme_bw()+
-  theme(legend.position="none",
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.text.y=element_text(size=15),
-        strip.text = element_text(size=15),
-        panel.grid = element_blank(),
-        panel.grid.major.y=element_line(color="grey60",size=0.2),
-        panel.grid.minor.y=element_line(color="grey60",size=0.1),
-        axis.title.y = element_blank(),
-        axis.ticks.x=element_blank())+  
-  scale_y_continuous(breaks=seq(0,0.6,0.2),minor_breaks = NULL)+
-  scale_color_manual(values=rep(c("grey45","grey70"),length(unique(win.df$chr))/2+1))+
-  geom_point(data=subset(win.df,value>0.0),size=0.75,shape=21,alpha=0.3)+
-  geom_point(data=subset(win.df,chr==5),size=0.75,shape=21,alpha=0.7)+
-  geom_point(data=subset(win.df, outlier=="TRUE"),size=1,shape=21,col="red")+
-  geom_hline(data=subset(win.df, stat=="F[ST]"),aes(yintercept=0.4084545),linetype="dashed",lwd=0.25)+
-  geom_hline(data=subset(win.df, stat=="D[XY]"),aes(yintercept=0.17),linetype="dashed",lwd=0.25)+
-  geom_line(aes(y=rollmean),lwd=0.15,col="black")+
-  geom_segment(data=chr_labels,aes(x=start+250,xend=stop-250,y=-0.025,yend=-0.025,col=NA),col="black")+
-  #geom_vline(xintercept=c(103017,114851)) +
-  geom_text(data=chr_labels,aes(label=chr,x=mid,y=-0.1,col=NA),
-            col="black",size=5,angle=0,direction="y",box.padding = 0.15,
-            segment.size=0.2) +
-  theme(strip.background = element_rect(colour="black", fill="grey100")) +
-  facet_grid(stat ~ ., labeller=label_parsed,scales = "free_y") 
-annotation_custom(ggplotGrob(q),
-                  xmin=10, xmax=10000, ymin=0, ymax=1)
-
-
-win.chr.fst.df <- read.csv("data/chromsomes_fst.csv")[,-1]
-r <- ggplot(data=win.chr.fst.df,aes(x=row,y=value))+theme_bw()+
-  theme(legend.position="none",
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        panel.grid = element_blank(),
-        panel.grid.major.y=element_line(color="grey60",size=0.2),
-        panel.grid.minor.y=element_line(color="grey60",size=0.1))+  
-  ylab(ylab.text) +
-  xlab("Position") +
-  scale_y_continuous(breaks=seq(0,1.0,0.2),minor_breaks = NULL)+
-  geom_line(aes(y=fst_rollmean),lwd=0.5,col="black")+
-  #geom_hline(aes(yintercept=0.409031),linetype="dashed",lwd=0.25)+
-  facet_grid(. ~ chr_order, scales="free_x") +
-  theme(strip.background = element_rect(colour="black", fill="grey100")) +
-  theme(legend.text=element_text(size=15),
-        axis.title.y = element_text(size=15),
-        axis.text.y = element_text(size=15),
-        legend.title=element_text(size=15))
-
-win.chr.dxy.df <- read.csv("data/chromsomes_dxy.csv")[,-1]
-x <- ggplot(data=win.chr.dxy.df,aes(x=row,y=value))+theme_bw()+
-  theme(legend.position="none",
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        panel.grid = element_blank(),
-        panel.grid.major.y=element_line(color="grey60",size=0.2),
-        panel.grid.minor.y=element_line(color="grey60",size=0.1))+  
-  ylab(ylab.text) +
-  xlab("Position") +
-  scale_y_continuous(breaks=c(0.1),minor_breaks = NULL)+
-  geom_line(aes(y=dxy_rollmean),lwd=0.5,col="black")+
-  #geom_hline(aes(yintercept=quantile(df2$dxy_meg_toro,0.995, na.rm = TRUE)),linetype="dashed",lwd=0.25)+
-  facet_grid(. ~ chr_order, scales="free_x") +
-  theme(strip.background = element_rect(colour="black", fill="grey100")) +
-  theme(legend.text=element_text(size=15),
-        axis.title.y = element_text(size=15),
-        axis.text.y = element_text(size=15),
-        legend.title=element_text(size=15))
-
-bottom <- plot_grid(r, x, nrow=2)
-
-outlier.df <- read.csv("data/outlier_correlations.csv")[,-1]
-s <- ggplot(data=outlier.df,aes(x=dxy_meg_toro,y=Fst_meg_toro)) +
-  theme_classic()+
-  #scale_fill_distiller(palette = "BrBG",direction = -1,name="log(n. windows)",guide=FALSE)+
-  geom_point(data=subset(outlier.df,fst_outlier=="FALSE" & dxy_outlier=="FALSE" & both_outlier=="FALSE"),shape=21,aes(col="grey80"))+
-  geom_point(data=subset(outlier.df,fst_outlier_05=="TRUE"),shape=21,aes(col="grey60"))+
-  geom_point(data=subset(outlier.df,dxy_outlier_05=="TRUE"),shape=21,aes(col="grey60"))+
-  geom_point(data=subset(outlier.df,fst_outlier=="TRUE"),shape=21,aes(col="grey40"))+
-  geom_point(data=subset(outlier.df,dxy_outlier=="TRUE"),shape=21,aes(col="grey40"))+
-  #geom_point(data=subset(df2,both_outlier=="TRUE"),shape=21,aes(col="red")) +
-  geom_hline(aes(yintercept=quantile(outlier.df$Fst_meg_toro,0.995, na.rm = TRUE),linetype="dashed"),lwd=0.25)+
-  geom_hline(aes(yintercept=quantile(outlier.df$Fst_meg_toro,0.95, na.rm = TRUE),linetype="solid"),lwd=0.25)+
-  geom_vline(aes(xintercept=quantile(outlier.df$dxy_meg_toro,0.995, na.rm = TRUE),linetype="dashed"),lwd=0.25)+
-  geom_vline(aes(xintercept=quantile(outlier.df$dxy_meg_toro,0.95, na.rm = TRUE),linetype="solid"),lwd=0.25)+
-  xlab(expression(D[XY])) +
-  ylab(expression(F[ST])) +
-  #geom_smooth(method="lm",fill=NA,col="black",lwd=0.65) +
-  scale_color_manual(name = element_blank(), 
-                     values =c('grey40'='grey40','grey60'='grey60','grey80'='grey80','red'='red'), 
-                     labels = c('outlier at 0.005','outlier at 0.05','nonoutlier','joint outlier at 0.05')) +
-  scale_linetype_manual(name = element_blank(), 
-                        values=c("dashed","solid"),
-                        labels=c("outlier at 0.005","outlier at 0.05")) +
-  theme(legend.text=element_text(size=15),
-        axis.title = element_text(size=15),
-        axis.text = element_text(size=15),
-        legend.title=element_text(size=15))
-
-
-top <- plot_grid(n, labels=c("A"))
-bottom2 <- plot_grid(bottom, s, labels=c("B","C"), ncol=2, rel_widths = c(0.75,0.5))
-pdf("figures/syma_3.pdf",width=18,height=12)
-plot_grid(top, bottom2,nrow=2, rel_heights=c(0.75,0.5))
+# write supplement trait info to file
+png("manuscript/syma_S2.png",res=300,width=12,height=9,units="in")
+plot_grid(d.3,d.4,d.5,d.6,labels="AUTO",nrow=2)
 dev.off()
-
-
