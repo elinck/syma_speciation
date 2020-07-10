@@ -121,6 +121,20 @@ md_df[12,]$sp <- "ochracea"
 md_df[23,]$sp <- "ochracea"
 md_df$sp <- as.factor(md_df$sp)
 
+# assign modern and historic samples
+md_df$tissue_type <- ifelse(md_df$year>2000, "modern", "historic")
+
+# missing data and coverage mean and sd
+aggregate(md_df$f_miss, by=list(md_df$sequencing_strategy), mean) #hyRAD 0.014916457, WGS 0.006966324
+aggregate(md_df$f_miss, by=list(md_df$sequencing_strategy), sd) #hyRAD 0.01343492, WGS 0.01037236
+aggregate(md_df$coverage, by=list(md_df$sequencing_strategy), mean) #hyRAD 4.427339, WGS 6.021934
+aggregate(md_df$coverage, by=list(md_df$sequencing_strategy), sd) #hyRAD 2.794949, WGS 3.569487
+aggregate(md_df$f_miss, by=list(md_df$tissue_type), mean) #historic 0.011428831, modern 0.007341647
+aggregate(md_df$f_miss, by=list(md_df$tissue_type), sd) #historic 0.013013127, modern 0.009132718
+aggregate(md_df$coverage, by=list(md_df$tissue_type), mean) #historic 5.452605, modern 4.426548
+aggregate(md_df$coverage, by=list(md_df$tissue_type), sd) #historic 3.320965, modern 3.235294
+
+
 # subset by sequencing strategy
 wgs <- md_df[md_df$sequencing_strategy=="WGS",]
 hyrad <- md_df[md_df$sequencing_strategy=="hyRAD",]
